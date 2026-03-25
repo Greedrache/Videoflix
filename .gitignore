@@ -1,0 +1,36 @@
+
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Python Cache- and Compiled Files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Django
+*.log
+*.sqlite3
+*.sqlite3-journal
+local_settings.py
+
+# Environment Variables
+.env.local
+.env.*.local
+
+# pytest & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# VS Code / IDE
+.vscode/
+.idea/
+*.swp
+
+# Operating System Files
+.DS_Store
+Thumbs.db
