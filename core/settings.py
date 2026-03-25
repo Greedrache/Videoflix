@@ -44,18 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'content.apps.ContentConfig',
-  #  'corsheaders',
-  #  'api',
-    # 'drf_yasg',
-    # 'django_filters',
-    # 'django_extensions',
-    # 'django_celery_results',
-    # 'django_celery_beat',
-    # 'django_celery_email',
-    # 'django_celery_redis',
-    # 'django_celery_scheduler',
     'django_rq',
-   # 'django_rq_scheduler',
+  #  'corsheaders',
 ]
 
 MIDDLEWARE = [
