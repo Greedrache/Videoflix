@@ -5,5 +5,5 @@ class ContentConfig(AppConfig):
     name = 'content'
 
     def ready(self):
-        # from . import signals  # Import signals to connect them when the app is ready
-        pass
+        from . import signals  # Import signals to connect them when the app is ready
+        
