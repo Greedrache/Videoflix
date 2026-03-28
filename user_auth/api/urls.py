@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path("register/", views.year_archive),
+ #   path('verification/', include('verify_email.urls'))
     path("activate/<uidb64>/<token>/", views.month_archive),
     path("login/", views.article_detail),
     path("logout/", views.article_detail),
