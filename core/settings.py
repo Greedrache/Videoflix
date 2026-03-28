@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'content.apps.ContentConfig',
     'user_auth.apps.UserAuthConfig',
@@ -56,6 +57,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -158,13 +160,18 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('EMAIL_ID') 
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PW')
+CORS_ALLOWED_ORIGINS = [
+    "https://tim-thiele.de",
+    "http://localhost:5500",
+    "http://127.0.0.1:5500",
+]
 
-DEFAULT_FROM_EMAIL = 'noreply<no_reply@domain.com>'
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_PRIVATE_NETWORK = True
+
