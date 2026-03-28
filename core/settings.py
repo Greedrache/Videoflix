@@ -29,6 +29,10 @@ SECRET_KEY = os.getenv('SECRET_KEY', default='django-insecure-hhb)tpnoq3-b&6)luo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
+# E-Mails im Terminal anzeigen beim Entwickeln (statt über SMTP zu senden, was ohne gültige Zugangsdaten lange lädt/fehlschlägt)
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
 
