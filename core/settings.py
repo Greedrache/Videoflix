@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'content.apps.ContentConfig',
     'user_auth.apps.UserAuthConfig',
     'django_redis',
-    # 'django_rq', # Auskommentiert, da RQ unter Windows (wegen fehlendem 'fork') nicht läuft
+    'django_rq', # Auskommentiert, da RQ unter Windows (wegen fehlendem 'fork') nicht läuft
     'whitenoise.runserver_nostatic',
 ]
 
@@ -67,6 +67,32 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+RQ_QUEUES = {
+    'default': {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0,
+        'USERNAME': 'some-user',
+     #   'PASSWORD': 'some-password',
+        'DEFAULT_TIMEOUT': 360,
+        'DEFAULT_RESULT_TTL': 800,
+        'REDIS_CLIENT_KWARGS': {    # Eventual additional Redis connection arguments
+            'ssl_cert_reqs': None,
+        },
+    },
+    'high': {
+        'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'),  # If you're on Heroku
+        'DEFAULT_TIMEOUT': 500,
+    },
+    'low': {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0,
+    }
+}
+
+RQ_EXCEPTION_HANDLERS = ['path.to.my.handler']  # If you need custom exception handlers
 
 ROOT_URLCONF = 'core.urls'
 

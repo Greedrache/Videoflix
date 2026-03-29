@@ -3,6 +3,16 @@
 import os
 import sys
 
+# --- Windows RQ Monkey Patch ---
+if sys.platform == "win32":
+    import multiprocessing
+    _orig_get_context = multiprocessing.get_context
+    def _patched_get_context(method=None):
+        if method == "fork":
+            method = "spawn"
+        return _orig_get_context(method)
+    multiprocessing.get_context = _patched_get_context
+# -------------------------------
 
 def main():
     """Run administrative tasks."""
