@@ -1,14 +1,8 @@
 from django.urls import path
-
 from . import views
 
 urlpatterns = [
-    path("register/", views.register_user),
- #   path('verification/', include('verify_email.urls'))
-    # path("activate/<uidb64>/<token>/", views.month_archive),
-    # path("login/", views.article_detail),
-    # path("logout/", views.article_detail),
-    # path("token/refresh/", views.article_detail),
-    # path("password_reset/", views.article_detail),
-    # path("password_confirm/<uidb64>/<token>/", views.article_detail),
+    path("register/", views.register_user, name='register'),
+    path("login/", views.login_user, name='login'),
+    path("activate/<uidb64>/<token>/", views.activate_user, name='activate'),
 ]

@@ -23,14 +23,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', default='django-insecure-hhb)tpnoq3-b&6)luoo6(sg-n#!e0g)q+#n%frcq8j=t6%i)s7')
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
-# E-Mails im Terminal anzeigen beim Entwickeln (statt über SMTP zu senden, was ohne gültige Zugangsdaten lange lädt/fehlschlägt)
-if DEBUG:
+if os.getenv('EMAIL_HOST_USER') and os.getenv('EMAIL_HOST_PASSWORD'):
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+    EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+    EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
+    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+    DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
@@ -52,7 +57,7 @@ INSTALLED_APPS = [
     'content.apps.ContentConfig',
     'user_auth.apps.UserAuthConfig',
     'django_redis',
-    'django_rq', # Auskommentiert, da RQ unter Windows (wegen fehlendem 'fork') nicht läuft
+    'django_rq',
     'whitenoise.runserver_nostatic',
 ]
 
@@ -82,7 +87,7 @@ RQ_QUEUES = {
         },
     },
     'high': {
-        'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'),  # If you're on Heroku
+        'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379/0'),  
         'DEFAULT_TIMEOUT': 500,
     },
     'low': {
@@ -186,10 +191,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-else:
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# (Old duplicates removed to avoid conflicts)
 
 
 CORS_ALLOWED_ORIGINS = [
