@@ -103,3 +103,19 @@ def activate_user(request, uidb64, token):
     else:
         return Response({"message": "Aktivierung fehlgeschlagen."}, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+@api_view(['POST'])
+def logout_user(request):
+    refresh_token = request.COOKIES.get('refresh_token')
+    if refresh_token:
+        try:
+            token = RefreshToken(refresh_token)
+            token.blacklist()  # Blacklist the refresh token
+        except Exception as e:
+            return Response({"detail": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
+
+    response = Response({"detail": "Logout successful"}, status=status.HTTP_200_OK)
+    response.delete_cookie('access_token')
+    response.delete_cookie('refresh_token')
+    return response
