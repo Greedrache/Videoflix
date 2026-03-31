@@ -98,7 +98,7 @@ RQ_QUEUES = {
     }
 }
 
-RQ_EXCEPTION_HANDLERS = ['path.to.my.handler']  # If you need custom exception handlers
+RQ_EXCEPTION_HANDLERS = []  # If you need custom exception handlers
 
 ROOT_URLCONF = 'core.urls'
 
@@ -202,6 +202,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_PRIVATE_NETWORK = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -210,3 +211,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #the location where uploaded media files will be stored and served from
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'range', 
+]

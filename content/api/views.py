@@ -19,8 +19,6 @@ def video_list(request):
         return Response(serializer.data)
     
     elif request.method == 'POST':
-        # Beim ModelSerializer des DRF sind Dateien automatisch in request.data vorhanden, 
-        # wir müssen KEIN separates 'files' Keyword-Argument übergeben.
         serializer = VideoSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -28,3 +26,30 @@ def video_list(request):
         return Response(serializer.errors, status=400)
 
 
+from django.http import FileResponse, Http404
+import os
+from django.conf import settings
+
+@api_view(['GET'])
+def stream_video(request, movie_id, resolution):
+    file_path = os.path.join(settings.MEDIA_ROOT, 'videos', str(movie_id), resolution, 'index.m3u8')
+    if os.path.exists(file_path):
+        response = FileResponse(open(file_path, 'rb'), content_type='application/vnd.apple.mpegurl')
+        response['Cache-Control'] = 'no-cache'
+        response['Access-Control-Allow-Origin'] = 'https://tim-thiele.de'
+        response['Access-Control-Allow-Private-Network'] = 'true'
+        response['Access-Control-Allow-Headers'] = '*'
+        return response
+    raise Http404("Video Playlist nicht gefunden.")
+
+@api_view(['GET'])
+def stream_video_segment(request, movie_id, resolution, segment):
+    file_path = os.path.join(settings.MEDIA_ROOT, 'videos', str(movie_id), resolution, segment)
+    if os.path.exists(file_path):
+        response = FileResponse(open(file_path, 'rb'), content_type='video/MP2T')
+        response['Cache-Control'] = 'max-age=3600'
+        response['Access-Control-Allow-Origin'] = 'https://tim-thiele.de'
+        response['Access-Control-Allow-Private-Network'] = 'true'
+        response['Access-Control-Allow-Headers'] = '*'
+        return response
+    raise Http404("Video Segment nicht gefunden.")
