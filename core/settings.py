@@ -204,3 +204,9 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_PRIVATE_NETWORK = True
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+#the location where uploaded media files will be stored and served from
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

@@ -112,6 +112,7 @@ def logout_user(request):
         try:
             token = RefreshToken(refresh_token)
             token.blacklist()  # Blacklist the refresh token
+            return Response({"detail": "Logout successful! All tokens will be deleted. Refresh token is now invalid."}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"detail": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 
