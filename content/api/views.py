@@ -1,14 +1,12 @@
 from django.shortcuts import render
-
-# Create your views here.
-
-
-from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from ..models import Video
 from .serializers import VideoSerializer
 
 @api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
 def video_list(request):
     """
     View to list all videos or create a new video. This view handles GET requests to retrieve a list of all videos and POST requests to create a new video entry in the database.
@@ -31,6 +29,7 @@ import os
 from django.conf import settings
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def stream_video(request, movie_id, resolution):
     file_path = os.path.join(settings.MEDIA_ROOT, 'videos', str(movie_id), resolution, 'index.m3u8')
     if os.path.exists(file_path):
@@ -43,6 +42,7 @@ def stream_video(request, movie_id, resolution):
     raise Http404("Video Playlist nicht gefunden.")
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def stream_video_segment(request, movie_id, resolution, segment):
     file_path = os.path.join(settings.MEDIA_ROOT, 'videos', str(movie_id), resolution, segment)
     if os.path.exists(file_path):

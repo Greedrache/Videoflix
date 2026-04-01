@@ -77,13 +77,15 @@ def login_user(request):
         key='access_token',
         value=str(refresh.access_token),
         httponly=True,
-        samesite='Lax'
+        samesite='None',
+        secure=True
     )
     response.set_cookie(
         key='refresh_token',
         value=str(refresh),
         httponly=True,
-        samesite='Lax'
+        samesite='None',
+        secure=True
     )
     return response
 
@@ -135,7 +137,8 @@ def refresh_token(request):
                 key='access_token',
                 value=new_access_token,
                 httponly=True,
-                samesite='Lax'
+                samesite='None',
+                secure=True
             )
             return response
         except Exception as e:
