@@ -120,3 +120,64 @@ def logout_user(request):
     response.delete_cookie('access_token')
     response.delete_cookie('refresh_token')
     return response
+
+
+
+@api_view(['POST'])
+def refresh_token(request):
+    refresh_token = request.COOKIES.get('refresh_token')
+    if refresh_token:
+        try:
+            token = RefreshToken(refresh_token)
+            new_access_token = str(token.access_token)
+            response = Response({"access_token": new_access_token}, status=status.HTTP_200_OK)
+            response.set_cookie(
+                key='access_token',
+                value=new_access_token,
+                httponly=True,
+                samesite='Lax'
+            )
+            return response
+        except Exception as e:
+            return Response({"detail": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"detail": "Refresh token not provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def password_reset_request(request):
+    email = request.data.get('email')
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return Response({"detail": "If an account with this email exists, a password reset email has been sent."}, status=status.HTTP_200_OK)
+
+    token = default_token_generator.make_token(user)
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    
+    reset_link = f"https://tim-thiele.de/pages/auth/confirm_password.html?uid={uid}&token={token}"   
+    send_mail(
+        subject="Password Reset Request for Videoflix",
+        message=f"Hello,\n\nClick the following link to reset your password:\n\n{reset_link}",
+        from_email="noreply@videoflix.com",
+        recipient_list=[email],
+    )
+    return Response({"detail": "If an account with this email exists, a password reset email has been sent."}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def password_reset_confirm(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        new_password = request.data.get('new_password')
+        if new_password:
+            user.set_password(new_password)
+            user.save()
+            return Response({"detail": "Password successfully reset."}, status=status.HTTP_200_OK)
+        else:
+            return Response({"detail": "New password not provided."}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({"detail": "Invalid link or token."}, status=status.HTTP_400_BAD_REQUEST)
