@@ -35,9 +35,7 @@ def stream_video(request, movie_id, resolution):
     if os.path.exists(file_path):
         response = FileResponse(open(file_path, 'rb'), content_type='application/vnd.apple.mpegurl')
         response['Cache-Control'] = 'no-cache'
-        response['Access-Control-Allow-Origin'] = 'https://tim-thiele.de'
-        response['Access-Control-Allow-Private-Network'] = 'true'
-        response['Access-Control-Allow-Headers'] = '*'
+
         return response
     raise Http404("Video Playlist nicht gefunden.")
 
@@ -48,8 +46,6 @@ def stream_video_segment(request, movie_id, resolution, segment):
     if os.path.exists(file_path):
         response = FileResponse(open(file_path, 'rb'), content_type='video/MP2T')
         response['Cache-Control'] = 'max-age=3600'
-        response['Access-Control-Allow-Origin'] = 'https://tim-thiele.de'
-        response['Access-Control-Allow-Private-Network'] = 'true'
-        response['Access-Control-Allow-Headers'] = '*'
+
         return response
     raise Http404("Video Segment nicht gefunden.")
