@@ -37,7 +37,7 @@ def stream_video(request, movie_id, resolution):
         response['Cache-Control'] = 'no-cache'
 
         return response
-    raise Http404("Video Playlist nicht gefunden.")
+    raise Http404("Video Playlist not found.")
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -48,4 +48,4 @@ def stream_video_segment(request, movie_id, resolution, segment):
         response['Cache-Control'] = 'max-age=3600'
 
         return response
-    raise Http404("Video Segment nicht gefunden.")
+    raise Http404("Video Segment not found.")

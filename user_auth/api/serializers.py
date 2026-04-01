@@ -14,16 +14,26 @@ class RegistrationSerializer(serializers.ModelSerializer):
         fields = ['id', 'email', 'password', 'confirmed_password']
 
     def validate_email(self, value):
+        """
+        Validates that the email is unique.
+        """
         if User.objects.filter(username=value).exists():
-            raise serializers.ValidationError("Ein Benutzer mit dieser E-Mail-Adresse existiert bereits.")
+            raise serializers.ValidationError("A user with that email already exists.")
         return value
 
     def validate(self, data):
+        """
+        Validates that the password and confirmed_password match.
+        """
         if data['password'] != data['confirmed_password']:
-            raise serializers.ValidationError({"password": "Passwörter stimmen nicht überein."})
+            raise serializers.ValidationError({"password": "Passwords do not match."})
         return data
 
     def create(self, validated_data):
+        """
+        Creates a new user with the provided email and password. 
+        The user is created with is_active set to False, and will need to verify their email before they can log in.
+        """
         user = User.objects.create_user(
             username=validated_data['email'],
             email=validated_data['email'],

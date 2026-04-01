@@ -2,6 +2,10 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class CustomJWTAuthentication(JWTAuthentication):
     def authenticate(self, request):
+        """
+        Overrides the default authenticate method to allow token retrieval from cookies if the Authorization header is not present.
+        This allows the frontend to store the access token in an HttpOnly cookie and still have it work with JWT authentication.
+        """
         header = self.get_header(request)
         
         if header is None:

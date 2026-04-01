@@ -10,12 +10,16 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-
 from .serializers import RegistrationSerializer
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register_user(request):
+    """
+    API endpoint for user registration. Accepts email, password, and confirmed_password in the request data.
+    Validates the data using the RegistrationSerializer, creates a new user with is_active set to
+    False, and sends an email with an activation link to the user's email address.
+    """
     serializer = RegistrationSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.save()
@@ -26,8 +30,8 @@ def register_user(request):
         verification_link = f"http://localhost:8000/api/activate/{uid}/{token}/"
         
         send_mail(
-            subject="Willkommen bei Videoflix! Bitte E-Mail bestaetigen",
-            message=f"Hallo,\n\nbitte klicke auf den folgenden Link, um deinen Account freizuschalten:\n\n{verification_link}",
+            subject="Welcome to Videoflix! Please verify your email",
+            message=f"Hello,\n\nPlease click the following link to activate your account:\n\n{verification_link}",
             from_email="noreply@videoflix.com",
             recipient_list=[user.email],
             fail_silently=False,
@@ -46,24 +50,26 @@ def register_user(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_user(request):
+    """
+    API endpoint for user login. Accepts email and password in the request data.
+    Authenticates the user, checks if the account is active, and if successful, generates
+    JWT access and refresh tokens, sets them in HttpOnly cookies, and returns a success response.
+    If authentication fails or the account is inactive, returns appropriate error responses.
+    """
     email = request.data.get('email')
     password = request.data.get('password')
-    
-    # In Django default auth, authenticate() returns None if user.is_active is False.
-    # We need to manually check password first to return the 403 instead of 401
+
     try:
         user = User.objects.get(username=email)
     except User.DoesNotExist:
-        return Response({"detail": "Ungueltige Anmeldedaten"}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
     if not user.check_password(password):
-        return Response({"detail": "Ungueltige Anmeldedaten"}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
     if not user.is_active:
-        # Authenticate returns None if inactive, which is why we do it manually
-        return Response({"detail": "Bitte aktiviere deinen Account ueber die Email."}, status=status.HTTP_403_FORBIDDEN)
+        return Response({"detail": "Please activate your account via email."}, status=status.HTTP_403_FORBIDDEN)
 
-    # generate tokens
     refresh = RefreshToken.for_user(user)
     response = Response({
         "detail": "Login successful",
@@ -92,6 +98,12 @@ def login_user(request):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def activate_user(request, uidb64, token):
+    """
+    API endpoint for account activation. Accepts uidb64 and token as URL parameters.
+    Decodes the uidb64 to get the user ID, retrieves the user, and checks if the token is valid.
+    If valid, sets the user's is_active to True and saves the user, effectively activating the account.
+    Returns a success response if activation is successful, or an error response if activation fails.
+    """
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -103,17 +115,22 @@ def activate_user(request, uidb64, token):
         user.save()
         return Response({"message": "Account successfully activated."}, status=status.HTTP_200_OK)
     else:
-        return Response({"message": "Aktivierung fehlgeschlagen."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": "Activation failed."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
 @api_view(['POST'])
 def logout_user(request):
+    """
+    API endpoint for user logout. Retrieves the refresh token from the cookies, blacklists it to invalidate it,
+    and deletes the access and refresh tokens from the cookies. Returns a success response if logout is successful.
+    If the refresh token is invalid or not provided, returns appropriate error responses.
+    """
     refresh_token = request.COOKIES.get('refresh_token')
     if refresh_token:
         try:
             token = RefreshToken(refresh_token)
-            token.blacklist()  # Blacklist the refresh token
+            token.blacklist()  
             return Response({"detail": "Logout successful! All tokens will be deleted. Refresh token is now invalid."}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"detail": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
@@ -127,6 +144,11 @@ def logout_user(request):
 
 @api_view(['POST'])
 def refresh_token(request):
+    """
+    API endpoint for refreshing the access token. Retrieves the refresh token from the cookies,
+    generates a new access token, and sets it in the cookies. Returns the new access token in the response.
+    If the refresh token is invalid or not provided, returns appropriate error responses.
+    """
     refresh_token = request.COOKIES.get('refresh_token')
     if refresh_token:
         try:
@@ -147,6 +169,11 @@ def refresh_token(request):
 
 @api_view(['POST'])
 def password_reset_request(request):
+    """
+    API endpoint for requesting a password reset. Accepts email in the request data.
+    If a user with the provided email exists, generates a password reset token and sends an email with a password reset link to the user's email address.
+    Returns a success response regardless of whether a user with the provided email exists, to prevent email enumeration.
+    """
     email = request.data.get('email')
     try:
         user = User.objects.get(email=email)
@@ -168,6 +195,11 @@ def password_reset_request(request):
 
 @api_view(['POST'])
 def password_reset_confirm(request, uidb64, token):
+    """
+    API endpoint for confirming a password reset and setting a new password. Accepts uidb64 and token as URL parameters, and new_password in the request data.
+    Decodes the uidb64 to get the user ID, retrieves the user, and checks if the token is valid. If valid, sets the user's password to the new password provided in the request data and saves the user.
+    Returns a success response if the password reset is successful, or an error response if the token is invalid or the new password is not provided.
+    """
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
