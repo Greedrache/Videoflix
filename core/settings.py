@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'django_redis',
     'django_rq',
     'whitenoise.runserver_nostatic',
+    'sslserver',
 ]
 
 MIDDLEWARE = [
