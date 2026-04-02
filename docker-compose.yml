@@ -20,6 +20,23 @@ services:
     volumes:
       - redis_data_1:/data
 
+  backend:
+    build: 
+      context: .
+      dockerfile: backend.Dockerfile
+    container_name: videoflix_backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=db
+      - REDIS_URL=redis://redis:6379/1
+
 volumes:
   postgres_data_1:
   redis_data_1:
