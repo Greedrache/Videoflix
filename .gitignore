@@ -34,3 +34,5 @@ htmlcov/
 # Operating System Files
 .DS_Store
 Thumbs.db
+# User Uploaded Media
+media/
