@@ -33,6 +33,9 @@ from django.conf import settings
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def stream_video(request, movie_id, resolution):
+    """
+    View to stream the video playlist (m3u8 file) for a given movie ID and resolution. This view handles GET requests to retrieve the m3u8 file for the specified movie and resolution, which is used by the client to stream the video content.
+    """ 
     file_path = os.path.join(settings.MEDIA_ROOT, 'videos', str(movie_id), resolution, 'index.m3u8')
     if os.path.exists(file_path):
         response = FileResponse(open(file_path, 'rb'), content_type='application/vnd.apple.mpegurl')
@@ -44,6 +47,9 @@ def stream_video(request, movie_id, resolution):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def stream_video_segment(request, movie_id, resolution, segment):
+    """
+    View to stream individual video segments (ts files) for a given movie ID, resolution, and segment name. This view handles GET requests to retrieve the specified ts file, which is used by the client to stream the video content in segments.
+    """
     file_path = os.path.join(settings.MEDIA_ROOT, 'videos', str(movie_id), resolution, segment)
     if os.path.exists(file_path):
         response = FileResponse(open(file_path, 'rb'), content_type='video/MP2T')

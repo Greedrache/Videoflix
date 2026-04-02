@@ -3,7 +3,8 @@ import os
 
 def convert_to_hls_480p(source_video_path, video_id):
     """
-    Nimmt das Originalvideo und zerlegt es in 480p HLS Segmente (.m3u8 und .ts Dateien)
+    Converts the uploaded video file to HLS format with 480p resolution using ffmpeg.
+    The converted video segments and playlist are saved in a target folder named after the video ID and resolution. The function constructs the appropriate ffmpeg command to perform the conversion and executes it as a subprocess.
     """
     base_dir = os.path.dirname(source_video_path)
     

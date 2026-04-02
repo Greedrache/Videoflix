@@ -9,6 +9,9 @@ import django_rq
 
 @receiver(post_save, sender=Video)
 def video_post_save(sender, instance, created, **kwargs):
+    """
+    Signal handler for the post_save signal of the Video model. This function is called whenever a Video instance is saved. If a new Video instance is created, it triggers the conversion of the uploaded video file to HLS format with 480p resolution by calling the convert_to_hls_480p function as a background task using django-rq.
+    """
     print('Signal received for Video model')
     if created:
          print('New object created')
