@@ -35,20 +35,18 @@
 <pre><code>git clone https://github.com/Greedrache/Vdeoflix .</code></pre>
 
 <h3>2. Create Virtual Environment</h3>
-<pre><code>python -m venv venv </code></pre>
-<h4>Windows </h4>
-<pre><code>.\venv\Scripts\activate </code></pre>
-<h4> Mac / Linux </h4>
-<pre><code>source venv/bin/activate </code></pre>
+<pre><code>python -m venv venv</code></pre>
 
+<h4>Windows</h4>
+<pre><code>.\venv\Scripts\activate</code></pre>
+
+<h4>Mac / Linux</h4>
+<pre><code>source venv/bin/activate</code></pre>
 
 <h3>3. Install Dependencies</h3>
 <pre><code>pip install -r requirements.txt</code></pre>
 
-<h3>4. Start Docker (Database + Redis)</h3>
-<pre><code>docker-compose up -d</code></pre>
-
-<h3>5. Configure Environment Variables (.env)</h3>
+<h3>4. Configure Environment Variables (.env)</h3>
 
 <h4>Windows</h4>
 <pre><code>SET SECRET_KEY=your_secure_key
@@ -88,24 +86,27 @@ export EMAIL_HOST_USER=your.email@gmail.com
 export EMAIL_HOST_PASSWORD=your_app_password
 </code></pre>
 
-<h3>6. Set Up Database</h3>
-<pre><code>python manage.py makemigrations
-python manage.py migrate
-</code></pre>
+<h3>5. Start Database & Redis (Docker)</h3>
+<p>Start only the database and Redis in the background so the backend can connect:</p>
+<pre><code>docker-compose up -d db redis</code></pre>
 
-<h3>Optional: Create Admin User</h3>
+<h3>6. Run Database Migrations</h3>
+<p>Create all database tables:</p>
+<pre><code>python manage.py migrate</code></pre>
+
+<h3>7. Create a Superuser (Optional but recommended)</h3>
+<p>For accessing the Django admin panel:</p>
 <pre><code>python manage.py createsuperuser</code></pre>
 
 <hr>
 
 <h2>▶️ Running the Project</h2>
-<p>Only after completing the steps above:</p>
 
 <h3>Terminal 1: Django Server</h3>
 <pre><code>python manage.py runserver</code></pre>
 <p>👉 Running on: http://127.0.0.1:8000</p>
 
-<h3>Terminal 2: Background Worker (Video Conversion)</h3>
+<h3>Terminal 2: Background Worker (Video Processing)</h3>
 <pre><code>python manage.py rqworker default</code></pre>
 
 <hr>
@@ -136,9 +137,6 @@ python manage.py migrate
 <ul>
 <li>FFmpeg must be installed</li>
 <li>Docker must be running before starting the server</li>
-<li>.env file must be configured correctly</li>
+<li>.env variables must be configured correctly</li>
 <li>Background worker must run for video processing</li>
 </ul>
-
-</body>
-</html>
