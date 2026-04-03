@@ -29,61 +29,72 @@
 <hr>
 
 <h2>⚙️ Setup Instructions</h2>
-<p>Before running the project, make sure to complete all the following steps in order:</p>
+<p>Before running the project, complete all the following steps in order:</p>
 
 <h3>1. Clone Repository</h3>
-<pre id="clone">git clone https://github.com/Greedrache/Vdeoflix .</pre>
-<button onclick="copy('clone')">Copy</button>
+<pre><code>git clone https://github.com/Greedrache/Vdeoflix .</code></pre>
 
 <h3>2. Create Virtual Environment</h3>
-<pre id="venv">
-python -m venv venv
-# Windows
-.\venv\Scripts\activate
-# Linux / MacOS
-source venv/bin/activate
-</pre>
-<button onclick="copy('venv')">Copy</button>
+<pre><code>python -m venv venv </code></pre>
+<h4>Windows </h4>
+<pre><code>.\venv\Scripts\activate </code></pre>
+<h4> Mac / Linux </h4>
+<pre><code>source venv/bin/activate </code></pre>
+
 
 <h3>3. Install Dependencies</h3>
-<pre id="pip">pip install -r requirements.txt</pre>
-<button onclick="copy('pip')">Copy</button>
+<pre><code>pip install -r requirements.txt</code></pre>
 
 <h3>4. Start Docker (Database + Redis)</h3>
-<pre id="docker">docker-compose up -d</pre>
-<button onclick="copy('docker')">Copy</button>
+<pre><code>docker-compose up -d</code></pre>
 
 <h3>5. Configure Environment Variables (.env)</h3>
-<pre id="env">
-SECRET_KEY=your_secure_key
-DJANGO_DEBUG=True
 
-POSTGRES_DB=postgres
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_HOST=localhost
-POSTGRES_PORT=5432
+<h4>Windows</h4>
+<pre><code>SET SECRET_KEY=your_secure_key
+SET DJANGO_DEBUG=True
 
-REDIS_URL=redis://localhost:6379/1
+SET POSTGRES_DB=postgres
+SET POSTGRES_USER=postgres
+SET POSTGRES_PASSWORD=postgres
+SET POSTGRES_HOST=localhost
+SET POSTGRES_PORT=5432
 
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USE_TLS=True
-EMAIL_HOST_USER=your.email@gmail.com
-EMAIL_HOST_PASSWORD=your_app_password
-</pre>
-<button onclick="copy('env')">Copy</button>
+SET REDIS_URL=redis://localhost:6379/1
+
+SET EMAIL_HOST=smtp.gmail.com
+SET EMAIL_PORT=587
+SET EMAIL_USE_TLS=True
+SET EMAIL_HOST_USER=your.email@gmail.com
+SET EMAIL_HOST_PASSWORD=your_app_password
+</code></pre>
+
+<h4>Mac / Linux</h4>
+<pre><code>export SECRET_KEY=your_secure_key
+export DJANGO_DEBUG=True
+
+export POSTGRES_DB=postgres
+export POSTGRES_USER=postgres
+export POSTGRES_PASSWORD=postgres
+export POSTGRES_HOST=localhost
+export POSTGRES_PORT=5432
+
+export REDIS_URL=redis://localhost:6379/1
+
+export EMAIL_HOST=smtp.gmail.com
+export EMAIL_PORT=587
+export EMAIL_USE_TLS=True
+export EMAIL_HOST_USER=your.email@gmail.com
+export EMAIL_HOST_PASSWORD=your_app_password
+</code></pre>
 
 <h3>6. Set Up Database</h3>
-<pre id="migrate">
-python manage.py makemigrations
+<pre><code>python manage.py makemigrations
 python manage.py migrate
-</pre>
-<button onclick="copy('migrate')">Copy</button>
+</code></pre>
 
 <h3>Optional: Create Admin User</h3>
-<pre id="admin">python manage.py createsuperuser</pre>
-<button onclick="copy('admin')">Copy</button>
+<pre><code>python manage.py createsuperuser</code></pre>
 
 <hr>
 
@@ -91,13 +102,11 @@ python manage.py migrate
 <p>Only after completing the steps above:</p>
 
 <h3>Terminal 1: Django Server</h3>
-<pre id="run">python manage.py runserver</pre>
-<button onclick="copy('run')">Copy</button>
+<pre><code>python manage.py runserver</code></pre>
 <p>👉 Running on: http://127.0.0.1:8000</p>
 
 <h3>Terminal 2: Background Worker (Video Conversion)</h3>
-<pre id="worker">python manage.py rqworker default</pre>
-<button onclick="copy('worker')">Copy</button>
+<pre><code>python manage.py rqworker default</code></pre>
 
 <hr>
 
@@ -130,3 +139,6 @@ python manage.py migrate
 <li>.env file must be configured correctly</li>
 <li>Background worker must run for video processing</li>
 </ul>
+
+</body>
+</html>
