@@ -1,4 +1,4 @@
-FROM python:3.12-alpine
+FROM python:3.12-slim
 
 LABEL maintainer="mihai@developerakademie.com"
 LABEL version="1.0"
@@ -8,13 +8,18 @@ WORKDIR /app
 
 COPY . .
 
-RUN apk update && \
-    apk add --no-cache --upgrade bash && \
-    apk add --no-cache postgresql-client ffmpeg && \
-    apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev && \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        bash \
+        postgresql-client \
+        ffmpeg \
+        build-essential \
+        gcc \
+        libpq-dev && \
     pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt && \
-    apk del .build-deps && \
+    apt-get purge -y --auto-remove gcc build-essential && \
+    rm -rf /var/lib/apt/lists/* && \
     chmod +x backend.entrypoint.sh
 
 EXPOSE 8000
