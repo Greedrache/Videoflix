@@ -32,7 +32,7 @@
 <p>The easiest way to run the entire backend (Database, Redis, Worker, and Django API) locally without installing dependencies natively.</p>
 
 <h3>1. Clone Repository</h3>
-<pre><code>git clone https://github.com/Greedrache/Vdeoflix .</code></pre>
+<pre><code>git clone https://github.com/Greedrache/Videoflix .</code></pre>
 
 <h3>2. Configure Environment Variables (.env)</h3>
 <p>Create a <code>.env</code> file in the root directory (where <code>docker-compose.yml</code> is) and add:</p>
@@ -71,15 +71,14 @@ EMAIL_HOST_PASSWORD=your_app_password
 <p>Only use this if you do not want to use the full Docker setup.</p>
 
 <h3>1. Clone Repository & Create Virtual Environment</h3>
-<pre><code>git clone https://github.com/Greedrache/Vdeoflix .
-python -m venv venv
+<pre><code>git clone https://github.com/Greedrache/Videoflix .</code></pre>
+<pre><code>python -m venv venv</code></pre>
 
 # Windows:
-.\venv\Scripts\activate
+<pre><code>.\venv\Scripts\activate </code></pre>
 
 # Mac / Linux:
-source venv/bin/activate
-</code></pre>
+<pre><code>source venv/bin/activate </code></pre>
 
 <h3>2. Install Dependencies</h3>
 <pre><code>pip install -r requirements.txt</code></pre>
