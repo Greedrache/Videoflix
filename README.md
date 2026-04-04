@@ -3,7 +3,7 @@
 <p>Django REST API for a Netflix-style video streaming platform.</p>
 
 <p>🌍 Live version:<br>
-👉 <a href="https://tim-thiele.de" target="_blank">https://tim-thiele.de</a></p>
+🔗 <a href="https://tim-thiele.de" target="_blank">https://tim-thiele.de</a></p>
 
 <hr>
 
@@ -13,105 +13,97 @@
 <li>🔐 JWT authentication via HTTPOnly cookies</li>
 <li>📧 Email verification & password reset</li>
 <li>🎥 HLS video streaming (.m3u8 & .ts)</li>
-<li>⚡ Background tasks with Redis & Django-RQ</li>
-<li>🐳 PostgreSQL via Docker</li>
+<li>⚙️ Background tasks with Redis & Django-RQ</li>
+<li>🐳 PostgreSQL, Redis & Backend via Docker</li>
 </ul>
 
 <hr>
 
-<h2>🛠️ Prerequisites</h2>
+<h2>📋 Prerequisites</h2>
 <ul>
-<li>Python 3.x</li>
-<li>Docker & Docker Desktop</li>
-<li>FFmpeg (must be added to PATH)</li>
+<li>🐳 Docker & Docker Desktop (Recommended for all platforms)</li>
+<li>🐍 Python 3.x & FFmpeg (Only needed for Local Installation)</li>
 </ul>
 
 <hr>
 
-<h2>⚙️ Setup Instructions</h2>
-<p>Before running the project, complete all the following steps in order:</p>
+<h2>🐳 Docker Installation (Recommended - Mac/Linux/Windows)</h2>
+
+<p>The easiest way to run the entire backend (Database, Redis, Worker, and Django API) locally without installing dependencies natively.</p>
 
 <h3>1. Clone Repository</h3>
 <pre><code>git clone https://github.com/Greedrache/Vdeoflix .</code></pre>
 
-<h3>2. Create Virtual Environment</h3>
-<pre><code>python -m venv venv</code></pre>
+<h3>2. Configure Environment Variables (.env)</h3>
+<p>Create a <code>.env</code> file in the root directory (where <code>docker-compose.yml</code> is) and add:</p>
 
-<h4>Windows</h4>
-<pre><code>.\venv\Scripts\activate</code></pre>
+<pre><code>SECRET_KEY=your_secure_key
+DJANGO_DEBUG=True
 
-<h4>Mac / Linux</h4>
-<pre><code>source venv/bin/activate</code></pre>
+POSTGRES_DB=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_HOST=db
+POSTGRES_PORT=5432
+DB_HOST=db
+DB_PORT=5432
 
-<h3>3. Install Dependencies</h3>
-<pre><code>pip install -r requirements.txt</code></pre>
+REDIS_URL=redis://redis:6379/1
 
-<h3>4. Configure Environment Variables (.env)</h3>
-
-<h4>Windows</h4>
-<pre><code>SET SECRET_KEY=your_secure_key
-SET DJANGO_DEBUG=True
-
-SET POSTGRES_DB=postgres
-SET POSTGRES_USER=postgres
-SET POSTGRES_PASSWORD=postgres
-SET POSTGRES_HOST=localhost
-SET POSTGRES_PORT=5432
-
-SET REDIS_URL=redis://localhost:6379/1
-
-SET EMAIL_HOST=smtp.gmail.com
-SET EMAIL_PORT=587
-SET EMAIL_USE_TLS=True
-SET EMAIL_HOST_USER=your.email@gmail.com
-SET EMAIL_HOST_PASSWORD=your_app_password
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=your.email@gmail.com
+EMAIL_HOST_PASSWORD=your_app_password
 </code></pre>
 
-<h4>Mac / Linux</h4>
-<pre><code>export SECRET_KEY=your_secure_key
-export DJANGO_DEBUG=True
+<h3>3. Start everything with Docker</h3>
+<p>This command builds the backend container, installs all Python requirements, creates the database, runs migrations, and starts the Django server alongside Redis and PostgreSQL.</p>
 
-export POSTGRES_DB=postgres
-export POSTGRES_USER=postgres
-export POSTGRES_PASSWORD=postgres
-export POSTGRES_HOST=localhost
-export POSTGRES_PORT=5432
+<pre><code>docker-compose up --build</code></pre>
 
-export REDIS_URL=redis://localhost:6379/1
-
-export EMAIL_HOST=smtp.gmail.com
-export EMAIL_PORT=587
-export EMAIL_USE_TLS=True
-export EMAIL_HOST_USER=your.email@gmail.com
-export EMAIL_HOST_PASSWORD=your_app_password
-</code></pre>
-
-<h3>5. Start Database & Redis (Docker)</h3>
-<p>Start only the database and Redis in the background so the backend can connect:</p>
-<pre><code>docker-compose up -d db redis</code></pre>
-
-<h3>6. Run Database Migrations</h3>
-<p>Create all database tables:</p>
-<pre><code>python manage.py migrate</code></pre>
-
-<h3>7. Create a Superuser (Optional but recommended)</h3>
-<p>For accessing the Django admin panel:</p>
-<pre><code>python manage.py createsuperuser</code></pre>
+<p>🌐 Running on: http://127.0.0.1:8000 (No need to run <code>manage.py runserver</code> or <code>rqworker</code> manually, Docker does everything!)</p>
 
 <hr>
 
-<h2>▶️ Running the Project</h2>
+<h2>💻 Local Installation (Alternative - Windows mostly)</h2>
 
-<h3>Terminal 1: Django Server</h3>
+<p>Only use this if you do not want to use the full Docker setup.</p>
+
+<h3>1. Clone Repository & Create Virtual Environment</h3>
+<pre><code>git clone https://github.com/Greedrache/Vdeoflix .
+python -m venv venv
+
+# Windows:
+.\venv\Scripts\activate
+
+# Mac / Linux:
+source venv/bin/activate
+</code></pre>
+
+<h3>2. Install Dependencies</h3>
+<pre><code>pip install -r requirements.txt</code></pre>
+
+<h3>3. Start Docker (Database + Redis ONLY)</h3>
+<pre><code>docker-compose up db redis -d</code></pre>
+
+<h3>4. Set Up Database Locally</h3>
+<pre><code>python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+</code></pre>
+
+<h3>5. Running the Project Locally</h3>
+
+<p>Terminal 1: Django Server</p>
 <pre><code>python manage.py runserver</code></pre>
-<p>👉 Running on: http://127.0.0.1:8000</p>
 
-<h3>Terminal 2: Background Worker (Video Processing)</h3>
+<p>Terminal 2: Background Worker (Video Conversion)</p>
 <pre><code>python manage.py rqworker default</code></pre>
 
 <hr>
 
-<h2>📡 API Endpoints</h2>
+<h2>🔌 API Endpoints</h2>
 
 <h3>🔐 Authentication</h3>
 <ul>
@@ -124,19 +116,9 @@ export EMAIL_HOST_PASSWORD=your_app_password
 <li>POST /api/password_confirm/&lt;uidb64&gt;/&lt;token&gt;/</li>
 </ul>
 
-<h3>🎥 Videos</h3>
+<h3>🎬 Videos</h3>
 <ul>
 <li>GET /api/video/</li>
 <li>GET /api/video/&lt;id&gt;/&lt;resolution&gt;/index.m3u8</li>
 <li>GET /api/video/&lt;id&gt;/&lt;resolution&gt;/&lt;segment&gt;</li>
-</ul>
-
-<hr>
-
-<h2>📌 Notes</h2>
-<ul>
-<li>FFmpeg must be installed</li>
-<li>Docker must be running before starting the server</li>
-<li>.env variables must be configured correctly</li>
-<li>Background worker must run for video processing</li>
 </ul>
