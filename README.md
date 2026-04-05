@@ -1,45 +1,45 @@
-<h1>🎬 Videoflix Backend</h1>
+# 🎬 Videoflix Backend
 
-<p>Django REST API for a Netflix-style video streaming platform.</p>
+Django REST API for a Netflix-style video streaming platform.
 
-<p>🌍 Live version:<br>
-🔗 <a href="https://tim-thiele.de" target="_blank">https://tim-thiele.de</a></p>
+🌍 Live version:  
+🔗 [https://tim-thiele.de](https://tim-thiele.de)
 
-<hr>
+---
 
-<h2>🚀 Features</h2>
-<ul>
-<li>👤 User registration, login, logout</li>
-<li>🔐 JWT authentication via HTTPOnly cookies</li>
-<li>📧 Email verification & password reset</li>
-<li>🎥 HLS video streaming (.m3u8 & .ts)</li>
-<li>⚙️ Background tasks with Redis & Django-RQ</li>
-<li>🐳 PostgreSQL, Redis & Backend via Docker</li>
-</ul>
+## 🚀 Features
 
-<hr>
+- 👤 User registration, login, logout
+- 🔐 JWT authentication via HTTPOnly cookies
+- 📧 Email verification & password reset
+- 🎥 HLS video streaming (.m3u8 & .ts)
+- ⚙️ Background tasks with Redis & Django-RQ
+- 🐳 PostgreSQL, Redis & Backend via Docker
 
-<h2>📋 Prerequisites</h2>
-<ul>
-<li>🐳 Docker & Docker Desktop (Recommended for all platforms)</li>
-<li>🐍 Python 3.x & FFmpeg (Only needed for Local Installation)</li>
-</ul>
+---
 
-<hr>
+## 📋 Prerequisites
 
-<h2>🐳 Docker Installation (Recommended - Mac/Linux/Windows)</h2>
+- 🐳 Docker & Docker Desktop (Recommended for all platforms)
+- 🐍 Python 3.x & FFmpeg (Only needed for Local Installation)
 
-<p>The easiest way to run the entire backend (Database, Redis, Worker, and Django API) locally without installing dependencies natively.</p>
+---
 
-<h3>1. Clone Repository</h3>
-<pre><code>git clone https://github.com/Greedrache/Videoflix .</code></pre>
+## 🐳 Docker Installation (Recommended - Mac/Linux/Windows)
 
-<h3>2. Configure Environment Variables (.env)</h3>
-<p>Create a <code>.env</code> file in the root directory (where <code>docker-compose.yml</code> is) and add:</p>
+The easiest way to run the entire backend (Database, Redis, Worker, and Django API) locally without installing dependencies natively.
 
-<pre><code>SECRET_KEY=your_secure_key
+### 1. Clone Repository
+```bash
+git clone https://github.com/Greedrache/Videoflix .
+```
+
+### 2. Configure Environment Variables (.env)
+
+Create a `.env` file in the root directory (where `docker-compose.yml` is) and add:
+```env
+SECRET_KEY=your_secure_key
 DJANGO_DEBUG=True
-
 POSTGRES_DB=postgres
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
@@ -47,77 +47,95 @@ POSTGRES_HOST=db
 POSTGRES_PORT=5432
 DB_HOST=db
 DB_PORT=5432
-
 REDIS_URL=redis://redis:6379/1
-
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_USE_TLS=True
 EMAIL_HOST_USER=your.email@gmail.com
 EMAIL_HOST_PASSWORD=your_app_password
-</code></pre>
+```
 
-<h3>3. Start everything with Docker</h3>
-<p>This command builds the backend container, installs all Python requirements, creates the database, runs migrations, and starts the Django server alongside Redis and PostgreSQL.</p>
+### 3. Start everything with Docker
 
-<pre><code>docker-compose up --build</code></pre>
+This command builds the backend container, installs all Python requirements, creates the database, runs migrations, and starts the Django server alongside Redis and PostgreSQL.
+```bash
+docker-compose up --build
+```
 
-<p>🌐 Running on: http://127.0.0.1:8000 (No need to run <code>manage.py runserver</code> or <code>rqworker</code> manually, Docker does everything!)</p>
+🌐 Running on: http://127.0.0.1:8000  
+(No need to run `manage.py runserver` or `rqworker` manually, Docker does everything!)
 
-<hr>
+---
 
-<h2>💻 Local Installation (Alternative - Windows mostly)</h2>
+## 💻 Local Installation (Alternative - Windows mostly)
 
-<p>Only use this if you do not want to use the full Docker setup.</p>
+Only use this if you do not want to use the full Docker setup.
 
-<h3>1. Clone Repository & Create Virtual Environment</h3>
-<pre><code>git clone https://github.com/Greedrache/Videoflix .</code></pre>
-<pre><code>python -m venv venv</code></pre>
+### 1. Clone Repository & Create Virtual Environment
+```bash
+git clone https://github.com/Greedrache/Videoflix .
+python -m venv venv
+```
 
-# Windows:
-<pre><code>.\venv\Scripts\activate </code></pre>
+Windows:
+```bash
+.\venv\Scripts\activate
+```
 
-# Mac / Linux:
-<pre><code>source venv/bin/activate </code></pre>
+Mac / Linux:
+```bash
+source venv/bin/activate
+```
 
-<h3>2. Install Dependencies</h3>
-<pre><code>pip install -r requirements.txt</code></pre>
+### 2. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
 
-<h3>3. Start Docker (Database + Redis ONLY)</h3>
-<pre><code>docker-compose up db redis -d</code></pre>
+### 3. Start Docker (Database + Redis ONLY)
+```bash
+docker-compose up db redis -d
+```
 
-<h3>4. Set Up Database Locally</h3>
-<pre><code>python manage.py makemigrations
+### 4. Set Up Database Locally
+```bash
+python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser
-</code></pre>
+```
 
-<h3>5. Running the Project Locally</h3>
+### 5. Running the Project Locally
 
-<p>Terminal 1: Django Server</p>
-<pre><code>python manage.py runserver</code></pre>
+Terminal 1 – Django Server:
+```bash
+python manage.py runserver
+```
 
-<p>Terminal 2: Background Worker (Video Conversion)</p>
-<pre><code>python manage.py rqworker default</code></pre>
+Terminal 2 – Background Worker (Video Conversion):
+```bash
+python manage.py rqworker default
+```
 
-<hr>
+---
 
-<h2>🔌 API Endpoints</h2>
+## 🔌 API Endpoints
 
-<h3>🔐 Authentication</h3>
-<ul>
-<li>POST /api/register/</li>
-<li>GET /api/activate/&lt;uidb64&gt;/&lt;token&gt;/</li>
-<li>POST /api/login/</li>
-<li>POST /api/logout/</li>
-<li>POST /api/token/refresh/</li>
-<li>POST /api/password_reset/</li>
-<li>POST /api/password_confirm/&lt;uidb64&gt;/&lt;token&gt;/</li>
-</ul>
+### 🔐 Authentication
 
-<h3>🎬 Videos</h3>
-<ul>
-<li>GET /api/video/</li>
-<li>GET /api/video/&lt;id&gt;/&lt;resolution&gt;/index.m3u8</li>
-<li>GET /api/video/&lt;id&gt;/&lt;resolution&gt;/&lt;segment&gt;</li>
-</ul>
+| Method | Endpoint |
+|--------|----------|
+| POST | `/api/register/` |
+| GET | `/api/activate/<uidb64>/<token>/` |
+| POST | `/api/login/` |
+| POST | `/api/logout/` |
+| POST | `/api/token/refresh/` |
+| POST | `/api/password_reset/` |
+| POST | `/api/password_confirm/<uidb64>/<token>/` |
+
+### 🎬 Videos
+
+| Method | Endpoint |
+|--------|----------|
+| GET | `/api/video/` |
+| GET | `/api/video/<id>/<resolution>/index.m3u8` |
+| GET | `/api/video/<id>/<resolution>/<segment>` |
