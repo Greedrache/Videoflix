@@ -30,14 +30,8 @@ services:
     depends_on:
       - db
       - redis
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_HOST=db
-      - DB_HOST=db
-      - DB_PORT=5432
-      - REDIS_URL=redis://redis:6379/1
+    env_file:
+      - .env
 
 volumes:
   postgres_data_1:
