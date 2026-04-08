@@ -27,7 +27,8 @@ def register_user(request):
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         
-        verification_link = f"http://localhost:8000/api/activate/{uid}/{token}/"
+        domain = request.get_host()
+        verification_link = f"http://{domain}/api/activate/{uid}/{token}/"
         
         send_mail(
             subject="Welcome to Videoflix! Please verify your email",
@@ -114,9 +115,9 @@ def activate_user(request, uidb64, token):
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-        return redirect('http://localhost:5500/login.html?activation=success')
+        return redirect('http://127.0.0.1:5500/')
     else:
-        return redirect('http://localhost:5500/login.html?activation=failed')
+        return redirect('http://127.0.0.1:5500/')
 
 
 
