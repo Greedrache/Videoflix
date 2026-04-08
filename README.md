@@ -40,16 +40,16 @@ Create a `.env` file in the root directory (where `docker-compose.yml` is) and a
 ```env
 DJANGO_SUPERUSER_USERNAME=admin
 DJANGO_SUPERUSER_PASSWORD=adminpassword
-DJANGO_SUPERUSER_EMAIL=admin@example.com
+DJANGO_SUPERUSER_EMAIL=admin@example.com # Update this to your actual email address
 
-SECRET_KEY="your-secret-key-here"
+SECRET_KEY="your-secret-key-here" # Replace with a secure, random key for production
 DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
 CSRF_TRUSTED_ORIGINS=http://localhost:5500,http://127.0.0.1:5500
 
-POSTGRES_DB=your_postgres_db
-POSTGRES_USER=your_postgres_user
-POSTGRES_PASSWORD=your_postgres_password
+POSTGRES_DB=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
 POSTGRES_HOST=db
 POSTGRES_PORT=5432
 REDIS_URL=redis://redis:6379/1
@@ -65,7 +65,7 @@ EMAIL_HOST_USER=your_email_user
 EMAIL_HOST_PASSWORD=your_email_user_password
 EMAIL_USE_TLS=True
 EMAIL_USE_SSL=False
-DEFAULT_FROM_EMAIL=default_from_email
+DEFAULT_FROM_EMAIL=default_from_email  # Update this to your actual email address
 ```
 
 ### 3. Start everything with Docker
