@@ -1,6 +1,6 @@
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
-from .tasks import convert_to_hls_480p
+from .tasks import convert_to_hls_480p, convert_to_hls_720p, convert_to_hls_1080p
 from .models import Video
 import os
 import django_rq
@@ -15,8 +15,11 @@ def video_post_save(sender, instance, created, **kwargs):
     print('Signal received for Video model')
     if created:
          print('New object created')
-        
-    convert_to_hls_480p(instance.video_file.path, instance.id)
+         queue = django_rq.get_queue('default', autocommit=True)
+         queue.enqueue(convert_to_hls_480p, instance.video_file.path, instance.id)
+         queue.enqueue(convert_to_hls_720p, instance.video_file.path, instance.id)
+         queue.enqueue(convert_to_hls_1080p, instance.video_file.path, instance.id)
+
 @receiver(post_delete, sender=Video)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
     """

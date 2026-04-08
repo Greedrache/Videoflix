@@ -27,7 +27,10 @@ SECRET_KEY = os.getenv('SECRET_KEY', default='django-insecure-hhb)tpnoq3-b&6)luo
 
 DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
-if os.getenv('EMAIL_HOST_USER') and os.getenv('EMAIL_HOST_PASSWORD'):
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+
+if EMAIL_HOST_USER != 'your_email_user' and EMAIL_HOST_USER != '':
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
     EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
