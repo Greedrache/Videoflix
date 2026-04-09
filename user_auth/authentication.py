@@ -7,7 +7,10 @@ class CustomJWTAuthentication(JWTAuthentication):
         This allows the frontend to store the access token in an HttpOnly cookie and still have it work with JWT authentication.
         """
 
-        if request.path in ['/api/login/', '/api/register/', '/api/logout/']:
+        public_paths = ['/api/login/', '/api/register/', '/api/logout/', '/api/password_reset/']
+        public_prefixes = ['/api/activate/', '/api/password_confirm/']
+        
+        if request.path in public_paths or any(request.path.startswith(prefix) for prefix in public_prefixes):
             return None
         
 

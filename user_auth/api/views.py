@@ -4,7 +4,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
@@ -13,6 +13,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import RegistrationSerializer
 
 @api_view(['POST'])
+@authentication_classes([])
 @permission_classes([AllowAny])
 def register_user(request):
     """
@@ -53,6 +54,7 @@ def register_user(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
+@authentication_classes([])
 @permission_classes([AllowAny])
 def login_user(request):
     """
@@ -101,6 +103,7 @@ def login_user(request):
     return response
 
 @api_view(['GET'])
+@authentication_classes([])
 @permission_classes([AllowAny])
 def activate_user(request, uidb64, token):
     """
@@ -118,13 +121,15 @@ def activate_user(request, uidb64, token):
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-        return redirect('http://127.0.0.1:5500/')
+        return redirect('http://127.0.0.1:5500/pages/auth/login.html')
     else:
-        return redirect('http://127.0.0.1:5500/')
+        return redirect('http://127.0.0.1:5500/pages/auth/login.html')
 
 
 
 @api_view(['POST'])
+@authentication_classes([])
+@permission_classes([AllowAny])
 def logout_user(request):
     """
     API endpoint for user logout. Retrieves the refresh token from the cookies, blacklists it to invalidate it,
@@ -148,6 +153,8 @@ def logout_user(request):
 
 
 @api_view(['POST'])
+@authentication_classes([])
+@permission_classes([AllowAny])
 def refresh_token(request):
     """
     API endpoint for refreshing the access token. Retrieves the refresh token from the cookies,
@@ -173,6 +180,8 @@ def refresh_token(request):
     return Response({"detail": "Refresh token not provided"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
+@authentication_classes([])
+@permission_classes([AllowAny])
 def password_reset_request(request):
     """
     API endpoint for requesting a password reset. Accepts email in the request data.
