@@ -30,7 +30,10 @@ def register_user(request):
         domain = request.get_host()
         verification_link = f"http://{domain}/api/activate/{uid}/{token}/"
         
-        send_mail(
+        import django_rq
+        queue = django_rq.get_queue('default', autocommit=True)
+        queue.enqueue(
+            send_mail,
             subject="Welcome to Videoflix! Please verify your email",
             message=f"Hello,\n\nPlease click the following link to activate your account:\n\n{verification_link}",
             from_email="noreply@videoflix.com",
@@ -186,7 +189,10 @@ def password_reset_request(request):
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     
     reset_link = f"http://localhost:5500/reset_password.html?uid={uid}&token={token}"   
-    send_mail(
+    import django_rq
+    queue = django_rq.get_queue('default', autocommit=True)
+    queue.enqueue(
+        send_mail,
         subject="Password Reset Request for Videoflix",
         message=f"Hello,\n\nClick the following link to reset your password:\n\n{reset_link}",
         from_email="noreply@videoflix.com",
