@@ -37,35 +37,32 @@ Create a `.env` file in the root directory (where `docker-compose.yml` is) and a
 ```env
 DJANGO_SUPERUSER_USERNAME=admin
 DJANGO_SUPERUSER_PASSWORD=adminpassword
-DJANGO_SUPERUSER_EMAIL=your_email # Update this to your actual email address
+DJANGO_SUPERUSER_EMAIL=admin@example.com
 
-SECRET_KEY="your_secret_key" # Generated: keep this secret
+SECRET_KEY="your_secret_key_here"
 DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
 CSRF_TRUSTED_ORIGINS=http://localhost:5500,http://127.0.0.1:5500
 
-DB_NAME=postgres
-DB_USER=postgres
-DB_PASSWORD=postgres
-POSTGRES_HOST=db
-POSTGRES_PORT=5432
+POSTGRES_DB=your_database_name
+DB_NAME=your_database_name
+DB_USER=your_database_user
+DB_PASSWORD=your_database_password
 DB_HOST=db
 DB_PORT=5432
-REDIS_URL=redis://redis:6379/1
 
 REDIS_HOST=redis
 REDIS_LOCATION=redis://redis:6379/1
 REDIS_PORT=6379
 REDIS_DB=0
 
-EMAIL_HOST=smtp.example.com   # As example: If you use gmail set this to smtp.gmail.com
+EMAIL_HOST=smtp.example.com
 EMAIL_PORT=587
-EMAIL_HOST_USER=your_email   #  Update this to your actual email address
-EMAIL_HOST_PASSWORD=afaqmzvswphvhfvd # Update this to your passwort
+EMAIL_HOST_USER=your_email_user
+EMAIL_HOST_PASSWORD=your_email_user_password
 EMAIL_USE_TLS=True
 EMAIL_USE_SSL=False
-DEFAULT_FROM_EMAIL=your_email   # Update this to your actual email address
-FRONTEND_URL=http://localhost:5500
+DEFAULT_FROM_EMAIL=default_from_email
 ```
 
 ### 3. Start everything with Docker
