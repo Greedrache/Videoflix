@@ -1,39 +1,45 @@
 services:
+
   db:
     image: postgres:latest
     container_name: videoflix_database
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      PGDATA: /var/lib/postgresql/pgdata # FIX FOR PG 18 ERROR
-    ports:
-      - "5432:5432"
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - postgres_data_1:/var/lib/postgresql
+      - postgres_data:/var/lib/postgresql
 
   redis:
     image: redis:latest
     container_name: videoflix_redis
-    ports:
-      - "6379:6379"
     volumes:
-      - redis_data_1:/data
+      - redis_data:/data
 
-  backend:
-    build: 
+  web:
+    build:
       context: .
       dockerfile: backend.Dockerfile
+    env_file: .env
     container_name: videoflix_backend
+
+    volumes:
+      - .:/app
+      - videoflix_media:/app/media
+      - videoflix_static:/app/static
     ports:
       - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
     depends_on:
       - db
       - redis
-    env_file:
-      - .env
+
+
+
 
 volumes:
-  postgres_data_1:
-  redis_data_1:
-
+  postgres_data:
+  redis_data:
+  videoflix_media:
+  videoflix_static:
