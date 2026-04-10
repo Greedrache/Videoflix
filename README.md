@@ -2,9 +2,6 @@
 
 Django REST API for a Netflix-style video streaming platform.
 
-🌍 Live version:  
-🔗 [https://tim-thiele.de](https://tim-thiele.de)
-
 ---
 
 ## 🚀 Features
