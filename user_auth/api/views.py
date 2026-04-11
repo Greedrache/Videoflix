@@ -33,6 +33,24 @@ def register_user(request):
         
         import django_rq
         queue = django_rq.get_queue('default', autocommit=True)
+        
+        email_html = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+            <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                <h2 style="color: #333333; text-align: center;">Welcome to Videoflix!</h2>
+                <p style="color: #555555; font-size: 16px;">Hello,</p>
+                <p style="color: #555555; font-size: 16px;">Thank you for registering. Please click the button below to verify your email address and activate your account:</p>
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="{verification_link}" style="background-color: #e50914; color: #ffffff; padding: 12px 24px; text-decoration: none; font-size: 16px; border-radius: 4px; display: inline-block;">Verify Account</a>
+                </div>
+                <p style="color: #777777; font-size: 14px; text-align: center;">If the button doesn't work, you can also copy and paste this link into your browser:</p>
+                <p style="color: #777777; font-size: 14px; text-align: center; word-break: break-all;"><a href="{verification_link}">{verification_link}</a></p>
+            </div>
+        </body>
+        </html>
+        """
+        
         queue.enqueue(
             send_mail,
             subject="Welcome to Videoflix! Please verify your email",
@@ -40,7 +58,7 @@ def register_user(request):
             from_email="noreply@videoflix.com",
             recipient_list=[user.email],
             fail_silently=False,
-            html_message=f"<html><body><h2>Welcome to Videoflix!</h2><p>Click <a href='{verification_link}'>here</a> to verify your account.</p></body></html>"
+            html_message=email_html
         )
 
         return Response({
@@ -197,16 +215,28 @@ def password_reset_request(request):
     token = default_token_generator.make_token(user)
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     
-    reset_link = f"http://localhost:5500/reset_password.html?uid={uid}&token={token}"   
+    reset_link = f"http://localhost:5500/pages/auth/confirm_password.html?uid={uid}&token={token}"   
     import django_rq
     queue = django_rq.get_queue('default', autocommit=True)
+    
+    email_html = f"""
+    <html>
+    <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <h2 style="color: #333333; text-align: center;">Password Reset</h2>
+            <p style="color: #555555; font-size: 16px; text-align: center;">Click <a href="{reset_link}" style="color: #e50914; text-decoration: none; font-weight: bold;">here</a> to reset your password</p>
+        </div>
+    </body>
+    </html>
+    """
+    
     queue.enqueue(
         send_mail,
         subject="Password Reset Request for Videoflix",
         message=f"Hello,\n\nClick the following link to reset your password:\n\n{reset_link}",
         from_email="noreply@videoflix.com",
         recipient_list=[email],
-        html_message=f"<html><body><h2>Password Reset</h2><p>Click <a href='{reset_link}'>here</a> to reset your password.</p></body></html>"
+        html_message=email_html
     )
     return Response({"detail": "If an account with this email exists, a password reset email has been sent."}, status=status.HTTP_200_OK)
 
