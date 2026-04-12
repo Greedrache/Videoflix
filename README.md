@@ -63,6 +63,7 @@ EMAIL_HOST_PASSWORD=your_email_user_password
 EMAIL_USE_TLS=True
 EMAIL_USE_SSL=False
 DEFAULT_FROM_EMAIL=default_from_email
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
 ```
 
 ### 3. Start everything with Docker
